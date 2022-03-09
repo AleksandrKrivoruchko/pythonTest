@@ -22,8 +22,8 @@ def symbol_print(count, end_space, symbol):
 
 
 while 1:
-    len = int(input("Введите число (чтобы выйти введите 0)\n"))
-    if not len:
+    len1 = int(input("Введите число (чтобы выйти введите 0)\n"))
+    if not len1:
         break
-    str = triangle(len)
-    print(str)
+    str1 = triangle(len1)
+    print(str1)
