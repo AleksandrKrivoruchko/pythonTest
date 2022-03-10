@@ -17,7 +17,7 @@ def symbol_print(count, end_space, symbol):
     str_temp = ''
     while count < end_space:
         str_temp += symbol
-        count +=1
+        count += 1
     return str_temp
 
 
