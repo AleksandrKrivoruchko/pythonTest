@@ -1,4 +1,6 @@
 from random import randint
+
+
 # Алгоритм бинарного поиска в упорядоченном списке
 def binary_search(list1, item):
     low = 0
@@ -33,7 +35,7 @@ def convert_array_to_string(source_array):
         else:
             array_str += str(source_array[i])
         k += 1
-        if k == 20:
+        if k == 10:
             array_str += '\n'
             k = 0
     return array_str
@@ -57,13 +59,21 @@ def selection_sort(arr):
     return new_arr
 
 
-my_list = [1, 3, 5, 7, 9]
-print(binary_search(my_list, 7))
-print(binary_search(my_list, -1))
-create_arr = create_int_array(100, -100, 100)
-# print(create_arr)
-str_arr = convert_array_to_string(create_arr)
-print(str_arr)
-sort_arr = selection_sort(create_arr)
-str_arr = convert_array_to_string(sort_arr)
-print(str_arr)
+# Функция вычисляющая факториал
+def fact(x):
+    if x == 1:
+        return 1
+    else:
+        return x * fact(x - 1)
+
+
+# my_list = [1, 3, 5, 7, 9]
+# print(binary_search(my_list, 7))
+# print(binary_search(my_list, -1))
+# create_arr = create_int_array(100, -100, 100)
+# # print(create_arr)
+# str_arr = convert_array_to_string(create_arr)
+# print(str_arr)
+# sort_arr = selection_sort(create_arr)
+# str_arr = convert_array_to_string(sort_arr)
+# print(str_arr)
