@@ -78,6 +78,13 @@ def fact(x):
         return x * fact(x - 1)
 
 
+# Функция возвращает дробную часть числа
+def separation_fractional_part(number_in):
+    temp = number_in
+    while temp > 1:
+        temp -= 1
+    return temp
+
 # my_list = [1, 3, 5, 7, 9]
 # print(binary_search(my_list, 7))
 # print(binary_search(my_list, -1))
