@@ -1,6 +1,9 @@
 # Генерированние псевдослучайных чисел
 # Линейный конгруэнтный метод r1 = mod(k * r0 + b, M)
 # M - модуль(0<M), k - множитель(0<=k<M), b - приращение(0<=b<M), r0 - начальное значение(0<=r0<M)
+import time
+
+
 def my_rnd(n_count):
     m = 2 ^ 31 - 1
     k = 33
@@ -40,3 +43,4 @@ for i in range(10):
     ri = round((hi_l - lo_l) * x + lo_l, 2)
     list1.append(ri)
 print(list1)
+print(time.time())
