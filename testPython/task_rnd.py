@@ -29,7 +29,7 @@ def lehmer_rng(num_previous):
 
 
 result_list = []
-temp = my_rnd(21)
+temp = my_rnd(time.time() % 20)
 for i in range(10):
     temp = my_rnd(temp)
     result_list.append(temp)
@@ -37,10 +37,11 @@ print(result_list)
 list1 = []
 hi_l = 10
 lo_l = 0
-x = lehmer_rng(1)
+x = lehmer_rng(time.time() % 10)
 for i in range(10):
     x = lehmer_rng(x)
-    ri = round((hi_l - lo_l) * x + lo_l, 2)
+    ri = round((hi_l - lo_l) * x + lo_l)
+    ri = (ri * 7) % 100
     list1.append(ri)
 print(list1)
 print(time.time())
