@@ -9,3 +9,5 @@ for i in range(1, n + 1):
     sum_list += x
 print(list_result)
 print(sum_list)
+l_res = sum([(1 + 1 / i)**i for i in range(1, n + 1)])
+print(l_res)

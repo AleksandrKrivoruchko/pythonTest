@@ -31,3 +31,4 @@ if 1 < count_result % 10 < 5 and (count_result < 10 or count_result > 20):
 else:
     insert_str = 'раз'
 print(f' Строка {str2} входит в строку {str1} {count_result} {insert_str}')
+print(str1.count(str2))
