@@ -1,3 +1,5 @@
+import time
+
 from alg_test import create_int_array, convert_array_to_string, selection_sort, fact, quicksort, separation_fractional_part
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
@@ -21,3 +23,8 @@ name_list = bs.find_all('span', {'class':'green'})
 for name in name_list:
     print(name.get_text())
 
+x = [time.time() % 10]
+for i in range(10):
+    x_tmp = (7 * x[i] + 10) % 19
+    x.append(round(x_tmp, 2))
+print(x)
