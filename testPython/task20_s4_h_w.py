@@ -1,6 +1,8 @@
 # Реализовать алгоритм задания случайных чисел
 # Без использования встроенного генератора псевдослучайных чисел
 import time
+import random
+
 
 def rnd_gen(value_set):
     a = 45
@@ -23,5 +25,16 @@ def rnd_func(n):
 
 
 for i in range(100):
-    rnd_list = rnd_func(20)
+    rnd_list = rnd_func(10)
     print(rnd_list)
+new_list = []
+for x in rnd_list:
+    if x == 0:
+        x = 1
+    tmp = (x * x - 7 * x) / x
+    new_list.append(tmp)
+
+print(set(list([(x // 10) % 10 for x in rnd_list])))
+print(new_list)
+new1_list = [random.randint(-9, 9) for i in range(20)]
+print(new1_list)
