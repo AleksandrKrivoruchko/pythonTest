@@ -25,6 +25,7 @@ def calcs(a, b, sign):
 
 def convert_str_to_list(str_source):
     str_source = str_source.strip().replace(' ', '')
+    sign = ['+', '-', '*', '/', ')', '(']
     list_str = []
     tmp_str = ''
     len_str = len(str_source)
@@ -34,16 +35,15 @@ def convert_str_to_list(str_source):
         if str_source[i] == '-':
             if i == 0:
                 flag = False
-            elif str_source[i-1] in ['+', '-', '*', '/', ')', '(']:
+            elif str_source[i-1] in sign and i+1 < len_str and str_source[i+1].isdigit() and str_source[i-1] != ')':
                 flag = False
-        if str_source[i] in ['+', '-', '*', '/', ')', '('] and flag:
+        if str_source[i] in sign and flag:
             list_str.append(str_source[i])
             if i + 1 < len_str and str_source[i+1] in ['(', ')']:
                 flag = True
-            # else:
-            #     flag = False
+
             i += 1
-        elif not flag and str_source[i] == '-':
+        elif not flag and str_source[i] == '-' and i+1 < len_str and str_source[i+1].isdigit():
             tmp_str += str_source[i]
             flag = True
             i += 1
@@ -111,7 +111,7 @@ def calcs_bracket(list1, bracket1):
     return temp_list
 
 
-source_str = '(-3 + 5)*(-8 / 4 * (6 + -10) +-16/2)'
+source_str = '(-3 + 5*-8 / 4 * (9 +7 -10 -16/2) + (100 / 2)) * (4/2)'
 print(source_str)
 result_list = convert_str_to_list(source_str)
 # print(calcs_list(result_list)[0])
@@ -124,3 +124,6 @@ while True:
         print(tmp_list)
     else:
         break
+if len(tmp_list) > 2:
+    result = calcs_list(tmp_list)
+    print(result[0])
