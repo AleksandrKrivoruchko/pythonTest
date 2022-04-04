@@ -38,10 +38,10 @@ def convert_str_to_list(str_source):
                 flag = False
         if str_source[i] in ['+', '-', '*', '/', ')', '('] and flag:
             list_str.append(str_source[i])
-            if i + 1 < len_str and str_source[i+1] == '(':
+            if i + 1 < len_str and str_source[i+1] in ['(', ')']:
                 flag = True
-            else:
-                flag = False
+            # else:
+            #     flag = False
             i += 1
         elif not flag and str_source[i] == '-':
             tmp_str += str_source[i]
@@ -82,7 +82,45 @@ def calcs_list(source_list):
     return tmp_list
 
 
-source_str = '-3 + (-8 / 4 * 6  -16/2)'
+def analysis_bracket(string_list):
+    bracket = []
+    for i, item in enumerate(string_list):
+        if item == '(':
+            bracket.append((1, i))
+        elif item == ')':
+            bracket.append((-1, i))
+    #print(bracket)
+    del_bracket = None
+    j = 0
+    while j < len(bracket) - 1:
+        #print(f'debug source {bracket[j][0] + bracket[j+1][0]}')
+        if not(bracket[j][0] + bracket[j+1][0]):
+            del_bracket = (bracket[j][1], bracket[j+1][1])
+            break
+        j += 1
+    #print(del_bracket)
+    return del_bracket
+
+
+def calcs_bracket(list1, bracket1):
+    tmp = calcs_list([x for i, x in enumerate(list1) if bracket1[0] < i < bracket1[1]])
+    #print(tmp)
+    temp_list = [x for i, x in enumerate(list1) if i <= bracket1[0] or i > bracket1[1]]
+    temp_list[bracket1[0]] = str(tmp[0])
+    #print(temp_list)
+    return temp_list
+
+
+source_str = '(-3 + 5)*(-8 / 4 * (6 + -10) +-16/2)'
 print(source_str)
 result_list = convert_str_to_list(source_str)
 # print(calcs_list(result_list)[0])
+
+tmp_list = [x for x in result_list]
+while True:
+    bracket_del = analysis_bracket(tmp_list)
+    if bracket_del is not None:
+        tmp_list = calcs_bracket(tmp_list, bracket_del)
+        print(tmp_list)
+    else:
+        break
