@@ -33,3 +33,11 @@ def is_correct_coordinates(cell_str):
             elif row == 3:
                 return (row + column) + 2
     return None
+
+
+def selection_symbol():
+    while True:
+        symbol = input('Выберите символ Х или 0 > ')
+        if symbol.lower() in ['0', 'x']:
+            return symbol
+        print(f'Неверный ввод {symbol}')
