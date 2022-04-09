@@ -4,7 +4,6 @@
 # print('X | 0 | X')
 # print('---------')
 # print('0 | X | 0')
-board_list = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 
 
 def do_mod(board_list):
@@ -13,6 +12,7 @@ def do_mod(board_list):
     print(f'{board_list[3]} | {board_list[4]} | {board_list[5]}')
     print('---------')
     print(f'{board_list[6]} | {board_list[7]} | {board_list[8]}')
+    return board_list
 
 
 def demo_mod():
@@ -23,3 +23,4 @@ def demo_mod():
 2   0 | X | X             |   |                   |   |
     ---------           ---------               ---------
 3   X | X | 0             |   |                 0 |   |''')
+    print('\n')
