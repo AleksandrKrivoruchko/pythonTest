@@ -1,23 +1,77 @@
-def is_element(i1, i2, i3):
-    if (i1 + i2) == i3:
-        return True
-    return False
+# Дан список чисел. Создать список в который попадают числа,
+# описывающие возрастающую последовательность, и содержащий максимальное количество элементов
+# Пример: [1, 5, 2, 3, 4, 6, 1, 7] => [1, 2, 3, 4, 6, 7]
+#         [5, 2, 3, 4, 6, 1, 7] => [2, 3, 4, 6, 7]
+# Порядок элементов менять нельзя
+# def does_el_fit(lst_in, el):
+#     if el in lst_in:
+#         return False
+#     elif el < lst_in[-1]:
+#         return False
+#     return True
+#
+#
+# def create_list(lst_in):
+#     lst_out = []
+#     for i in range(len(lst_in) - 1):
+#         if len(lst_out) == 0:
+#             if lst_in[i] < lst_in[i + 1]:
+#                 lst_out.append(lst_in[i])
+#         elif does_el_fit(lst_out, lst_in[i]) and lst_in[i] < lst_in[i + 1]:
+#             lst_out.append(lst_in[i])
+#         elif does_el_fit(lst_out, lst_in[i]):
+#             if lst_in[i] > lst_in[i - 1]:
+#                 lst_out.append(lst_in[i])
+#     if does_el_fit(lst_out, lst_in[-1]):
+#         lst_out.append(lst_in[-1])
+#     return lst_out
+
+# Формирует список списков, полученных при помощи new_list
+def analysis_list(lst_in):
+    res_lst = []
+    for i in range(len(lst_in) - 1):
+        tmp = new_list(lst_in[i:])
+        res_lst.append(tmp)
+    return res_lst
 
 
-list1 = [1, 5, 2, 3, 4, 6, 1, 7]
-list2 = []
-i = 0
-flag = True
-while i < len(list1) - 2:
-    if list1[i] < list1[i + 1]:
-        for el2 in list1[i+2:]:
-            for el1 in list1[i+1: -1]:
-                if is_element(list1[i], el1, el2) and flag:
-                    list2.append(list1[i])
-                    list2.append(el1)
-                    list2.append(el2)
-                    flag = False
-                elif is_element(list1[i], el1, el2):
-                    list2.append(el2)
-    i += 1
-print(list2)
+# Возвращает True, если элемент меньше элементов следующих за ним
+# в исходном списке и он больше последнего элемента в формируемом списке
+# Аргументы: list_in - исходный список,
+#            el_list_out - последний элемент формирующегося списка
+#            index - индекс проверяемого элемента
+def whether_add_el(list_in, el_list_out, index):
+    for i in range(index, len(list_in)):
+        if el_list_out >= list_in[i]:
+            continue
+        elif list_in[index] > list_in[i]:
+            return False
+    return True
+
+
+# Функция формирует список возрастающих элементов из исходного списка.
+# Порядок следования элементов не меняется.
+# Использует функцию whether_add_el
+def new_list(list_in):
+    list_out = []
+    for i in range(len(list_in)):
+        if len(list_out) == 0 and list_in[i] < list_in[i+1]:
+            list_out.append(list_in[i])
+        elif len(list_out) > 0 and list_in[i] > list_out[-1] and whether_add_el(list_in, list_out[-1], i):
+            list_out.append(list_in[i])
+    return list_out
+
+
+lst = [1, 5, 2, 3, 4, 6, 1, 7]
+lst_1 = [5, 2, 3, 4, 6, 1, 7, 3, 8, 2, 4, 9, 10, 1, 6, 2, 3, 4, 5, 6, 7, 8, 9, 10, 7, 8, 11]
+lst_2 = [5, 2, 3, 4, 6, 1, 7]
+
+lst_res = analysis_list(lst_1)
+index_max = 0
+for i, item in enumerate(lst_res):
+    if len(item) > len(lst_res[index_max]):
+        index_max = i
+    # print(item)
+print(new_list(lst))
+print(new_list(lst_2))
+print(lst_res[index_max])
