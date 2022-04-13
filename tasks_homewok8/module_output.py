@@ -4,21 +4,13 @@
 # print('X | 0 | X')
 # print('---------')
 # print('0 | X | 0')
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 48114de165bc6badf5011a937fb1386978a904a3
 def do_mod(board_list):
     print(f'{board_list[0]} | {board_list[1]} | {board_list[2]}')
     print('---------')
     print(f'{board_list[3]} | {board_list[4]} | {board_list[5]}')
     print('---------')
     print(f'{board_list[6]} | {board_list[7]} | {board_list[8]}')
-<<<<<<< HEAD
-=======
     print()
->>>>>>> 48114de165bc6badf5011a937fb1386978a904a3
     return board_list
 
 
