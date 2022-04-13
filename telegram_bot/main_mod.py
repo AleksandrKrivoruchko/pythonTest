@@ -8,10 +8,14 @@
 #     bar.next()
 # bar.finish()
 import telebot
-import wikipedia, re
+import wikipedia
+import re
+
+with open('bot_token', 'r') as ft:
+    token = ft.readline()
 
 # Создаем экземпляр бота
-bot = telebot.TeleBot('5080102141:AAFJCwcLWv5kuGywtGqArEVClg-uNO3J_hc')
+bot = telebot.TeleBot(token)
 
 # Устанавливаем русский язык в Wikipedia
 wikipedia.set_lang("ru")
@@ -56,6 +60,6 @@ def start(m, res=False):
 @bot.message_handler(content_types=['text'])
 def handle_text(message):
     bot.send_message(message.chat.id, getWiki(message.text))
-
+print("server start")
 # Запускаем бота
 bot.polling(none_stop=True, interval=0)
