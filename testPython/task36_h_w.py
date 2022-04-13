@@ -3,36 +3,10 @@
 # Пример: [1, 5, 2, 3, 4, 6, 1, 7] => [1, 2, 3, 4, 6, 7]
 #         [5, 2, 3, 4, 6, 1, 7] => [2, 3, 4, 6, 7]
 # Порядок элементов менять нельзя
-# def does_el_fit(lst_in, el):
-#     if el in lst_in:
-#         return False
-#     elif el < lst_in[-1]:
-#         return False
-#     return True
-#
-#
-# def create_list(lst_in):
-#     lst_out = []
-#     for i in range(len(lst_in) - 1):
-#         if len(lst_out) == 0:
-#             if lst_in[i] < lst_in[i + 1]:
-#                 lst_out.append(lst_in[i])
-#         elif does_el_fit(lst_out, lst_in[i]) and lst_in[i] < lst_in[i + 1]:
-#             lst_out.append(lst_in[i])
-#         elif does_el_fit(lst_out, lst_in[i]):
-#             if lst_in[i] > lst_in[i - 1]:
-#                 lst_out.append(lst_in[i])
-#     if does_el_fit(lst_out, lst_in[-1]):
-#         lst_out.append(lst_in[-1])
-#     return lst_out
 
 # Формирует список списков, полученных при помощи new_list
 def analysis_list(lst_in):
-    res_lst = []
-    for i in range(len(lst_in) - 1):
-        tmp = new_list(lst_in[i:])
-        res_lst.append(tmp)
-    return res_lst
+    return [new_list(lst_in[i:]) for i in range(len(lst_in)-1)]
 
 
 # Возвращает True, если элемент меньше элементов следующих за ним
@@ -72,6 +46,9 @@ for i, item in enumerate(lst_res):
     if len(item) > len(lst_res[index_max]):
         index_max = i
     # print(item)
-print(new_list(lst))
-print(new_list(lst_2))
+print(lst)
+print(new_list(lst), '\n')
+print(lst_2)
+print(new_list(lst_2), '\n')
+print(lst_1)
 print(lst_res[index_max])
