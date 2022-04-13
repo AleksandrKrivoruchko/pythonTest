@@ -1,5 +1,5 @@
 def triangle(x):
-    start = x//2 + 1
+    start = x // 2 + 1
     end = start
     symbol = '*'
     transfer = '\n'
@@ -12,6 +12,7 @@ def triangle(x):
         start -= 1
         end += 1
     return str_triangle
+
 
 def symbol_print(count, end_space, symbol):
     str_temp = ''
