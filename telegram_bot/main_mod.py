@@ -62,4 +62,4 @@ def handle_text(message):
     bot.send_message(message.chat.id, getWiki(message.text))
 print("server start")
 # Запускаем бота
-bot.polling(none_stop=True, interval=0)
+bot.polling()
