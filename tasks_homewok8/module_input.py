@@ -1,18 +1,5 @@
 # Модуль ввода
-<<<<<<< HEAD
-from module_output import demo_mod as demo
-from module_output import do_mod as do
 
-
-def do_mod(count):
-    if not count:
-        demo()
-
-
-board_list = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
-do_mod(0)
-do(board_list)
-=======
 def do_mod():
     print('Ваш ход')
     print('Введите координаты ячейки разделенные запятой (1,3)')
@@ -55,4 +42,3 @@ def selection_symbol():
         if symbol.lower() in ['0', 'x']:
             return symbol
         print(f'Неверный ввод {symbol}')
->>>>>>> 48114de165bc6badf5011a937fb1386978a904a3
