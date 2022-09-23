@@ -28,7 +28,7 @@ def send_message(user_id, text):
 
 
 def parse_json(json_in):
-    id_user = json_in['result'][1]['message']['from']['id']
+    id_user = json_in['result'][-1]['message']['from']['id']
     text = json_in['result'][-1]['message']['text']
     return [id_user, text]
 
