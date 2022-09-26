@@ -1,34 +1,15 @@
-
 import socket
-import threading
+import sys
 
-name = input("Input your nickname ")
+host, port = "localhost", 9999
+data = " ".join(sys.argv[1:])
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(("127.0.0.1", 55555))
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+    sock.connect((host, port))
+    sock.sendall(bytes(data + "\n", "utf-8"))
+    received = str(sock.recv(1024), "utf-8")
+    sock.send(bytes("ted\n", "utf-8"))
+    received = str(sock.recv(1024))
 
-
-def receive():
-    while True:
-        try:
-            message = client.recv(1024).decode('utf8')
-            if not message:
-                print(write())
-                continue
-            if message == "NICK":
-                client.send(name.encode('utf8'))
-            else:
-                print(message)
-        except:
-            print("An error occured!")
-            client.close()
-            break
-
-
-def write():
-    mess = "{}: {}".format(name, input('w '))
-    client.send(mess.encode('ascii'))
-    return "OK"
-
-
-receive()
+print("Sent:      {}".format(data))
+print("Received:  {}".format(received))

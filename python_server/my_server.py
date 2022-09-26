@@ -1,55 +1,25 @@
-import socket
-import threading
-
-host = "127.0.0.1"
-port = 55555
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((host, port))
-server.listen()
-
-clients = []
-nick_names = []
+import socketserver
 
 
-def broadcast(message):
-    for client in clients:
-        client.send(message)
+class MyTCPHandler(socketserver.BaseRequestHandler):
+    clients = []
+    nickname = []
+
+    def handle(self):
+        self.data = self.request.recv(1024).strip()
+
+        if self.client_address[0] in self.clients:
+            print("{} wrote:".format(self.client_address))
+            print(self.data.decode('utf-8'))
+            self.request.sendall(self.data)
+        else:
+            self.request.send(bytes("Input your nick", "utf-8"))
+            self.clients.append(self.client_address[0])
+            self.nickname.append(self.request.recv(1024).strip)
+            self.request.send(self.nickname[0])
 
 
-def handle(client):
-    while True:
-        try:
-            message = client.revc(1024)
-            if not message:
-                break
-            broadcast(message)
-        except:
-            index = clients.index(client)
-            clients.remove(client)
-            client.close()
-            nick_name = nick_names[index]
-            broadcast("{} left!".format(nick_name).encode('utf8'))
-            nick_names.remove(nick_name)
-            break
-
-
-def receive():
-    while True:
-        client, address = server.accept()
-        print("Connected which {}".format(str(address)))
-
-        client.send("NICK".encode('utf8'))
-        nick_name = client.recv(1024).decode('utf8')
-        nick_names.append(nick_name)
-        clients.append(client)
-
-        print("Nickname is {}".format(nick_name))
-        broadcast("{} joined!".format(nick_name).encode('utf8'))
-        client.send("Connected to server!".encode('utf8'))
-
-        thread = threading.Thread(target=handle, args=(client,))
-        thread.start()
-
-
-print("Server is listening...")
-receive()
+if __name__ == "__main__":
+    host, port = "localhost", 9999
+    with socketserver.TCPServer((host, port), MyTCPHandler) as server:
+        server.serve_forever()
