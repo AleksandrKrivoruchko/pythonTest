@@ -2,7 +2,6 @@ import types
 import socket
 import select
 from collections import namedtuple
-from sqlite3 import connect
 
 Session = namedtuple('Session', ['address', 'file'])
 
