@@ -1,8 +1,6 @@
 import types
 import socket
 import select
-from operator import mul
-from functools import reduce
 from collections import namedtuple
 from sqlite3 import connect
 
@@ -11,6 +9,7 @@ Session = namedtuple('Session', ['address', 'file'])
 sessions = {}
 callback = {}
 generators = {}
+nicknames = {}
 
 
 def reactor(host, port):
@@ -49,6 +48,7 @@ def connect(conn, cli_address):
 
 
 def disconnect(conn):
+    nicknames.pop(conn)
     gen = generators.pop(conn)
     gen.close()
     sessions[conn].file.close()
@@ -58,44 +58,33 @@ def disconnect(conn):
     del callback[conn]
 
 
-async def process_request(conn):
-    print(f'Received connection from {sessions[conn].address}')
-    mode = 'sum'
+def send_mess(conn, line):
+    for name in nicknames:
+        name.sendall(bytes(f'{nicknames[conn]}:\n {line}\r\n', 'utf-8'))
 
+
+async def process_request(conn):
+    conn.sendall(b'Input your nickname\n')
+    answer = await readline(conn)
+    nicknames[conn] = answer
+    send_mess(conn, 'joined!')
+    print(
+        f'Received connection from {nicknames[conn]} {sessions[conn].address}')
     try:
-        conn.sendall(b'<welcome: starting in sum mode>\n')
+        conn.sendall(b'<welcome: %a>\n' % nicknames[conn])
         while True:
             line = await readline(conn)
-            if line == 'quit':
-                conn.sendall(b'connection closed\r\n')
+            if line == 'q':
+                conn.sendall(b'%a: %a connection closed\r\n' %
+                             (nicknames[conn], sessions[conn].address))
                 return
+            send_mess(conn, line)
 
-            if line == 'sum':
-                conn.sendall(b'<switching to sum mode>\r\n')
-                mode = 'sum'
-                continue
-            if line == 'product':
-                conn.sendall(b'<switching to product mode>\r\n')
-                mode = 'product'
-                continue
+            print(f'{nicknames[conn]} --> {line}')
 
-            print(f'{sessions[conn].address} --> {line}')
-            try:
-                nums = list(map(int, line.split(',')))
-            except ValueError:
-                conn.sendall(
-                    b'ERROR Enter only integers separated by commas\n'
-                )
-                continue
-
-            if mode == 'sum':
-                conn.sendall(b'Sum of input numbers: %a\r\n' %
-                             str(sum(nums)))
-            else:
-                conn.sendall(b'Product of input numbers: %a\r\n' % str(
-                    reduce(mul, nums, 1)))
     finally:
-        print(f'{sessions[conn].address} quit')
+        send_mess(conn, f'{nicknames[conn]} leaved!')
+        print(f'{nicknames[conn]} {sessions[conn].address} leaved')
 
 
 @types.coroutine
@@ -114,7 +103,4 @@ def readline(conn):
 if __name__ == '__main__':
     host = "127.0.0.1"
     port = 55555
-    # addr = (host, port)
-    # socket_list = []
-    # nickname_list = []
     reactor(host, port)
