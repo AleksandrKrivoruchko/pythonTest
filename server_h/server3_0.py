@@ -33,6 +33,7 @@ def reactor(host, port):
                     callback[conn](conn, line.rstrip())
                 else:
                     disconnect(conn)
+                    break
     finally:
         sock.close()
 
@@ -54,26 +55,31 @@ def disconnect(conn):
 
     del sessions[conn]
     del callback[conn]
+   
 
 
 def send_mess(conn, line):
     for socket in nicknames:
         if socket is conn:
             continue
-        socket.sendall(bytes(f'{nicknames[conn]}:\n {line}\r\n', 'utf-8'))
+        socket.sendall(bytes(f'{nicknames[conn]}:\r\n{line}\r\n', 'utf-8'))
 
 
 async def process_request(conn):
-    conn.sendall(bytes('Input your nickname\n', 'utf-8'))
-    answer = await readline()
-    nicknames[conn] = answer
-    send_mess(conn, 'joined!')
-    print(
-        f'Received connection from {nicknames[conn]} {sessions[conn].address}')
     try:
-        conn.sendall(bytes(f'<welcome: {nicknames[conn]}>\n', 'utf-8'))
+
+        conn.sendall(bytes('Input your nickname\r\n', 'utf-8'))
+        answer = await readline()
+        nicknames[conn] = answer
+        send_mess(conn, 'joined!')
+        print(
+            f'Received connection from {nicknames[conn]} {sessions[conn].address}')
+        conn.sendall(bytes(f'<welcome: {nicknames[conn]}>\r\n', 'utf-8'))
         while True:
-            line = await readline()
+            try:
+                line = await readline()
+            except:
+                return
             if line == 'q':
                 conn.sendall(bytes(
                     f'{nicknames[conn]}: {sessions[conn].address} connection closed\r\n',
@@ -84,7 +90,10 @@ async def process_request(conn):
 
             print(f'{nicknames[conn]} --> {line}')
     finally:
-        print(f'{nicknames[conn]} {sessions[conn].address} leaved')
+        try:
+            print(f'{nicknames[conn]} {sessions[conn].address} leaved')
+        except:
+            print("Error")
 
 
 @types.coroutine
