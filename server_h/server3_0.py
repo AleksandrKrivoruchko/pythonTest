@@ -15,7 +15,6 @@ def reactor(host, port):
     sock = socket.socket()
     sock.bind((host, port))
     sock.listen(5)
-    sock.setblocking(0)
 
     sessions[sock] = None
     print(f'Server up, running, and waiting for call on {host}:{port}')
@@ -29,11 +28,15 @@ def reactor(host, port):
                     connect(conn, cli_address)
                     continue
 
-                line = sessions[conn].file.readline()
+                try:
+                    line = sessions[conn].file.readline()
+                except UnicodeDecodeError:
+                    pass
                 if line:
                     callback[conn](conn, line.rstrip())
                 else:
                     disconnect(conn)
+                    break
     finally:
         sock.close()
 
@@ -47,7 +50,7 @@ def connect(conn, cli_address):
 
 
 def disconnect(conn):
-    nicknames.pop(conn)
+    del nicknames[conn]
     gen = generators.pop(conn)
     gen.close()
     sessions[conn].file.close()
@@ -58,36 +61,44 @@ def disconnect(conn):
 
 
 def send_mess(conn, line):
-    for name in nicknames:
-        name.sendall(bytes(f'{nicknames[conn]}:\n {line}\r\n', 'utf-8'))
+    for socket in nicknames:
+        if socket is conn:
+            continue
+        socket.sendall(bytes(f'{nicknames[conn]}:\r\n{line}\r\n', 'utf-8'))
 
 
 async def process_request(conn):
-    conn.sendall(b'Input your nickname\n')
-    answer = await readline(conn)
-    nicknames[conn] = answer
-    send_mess(conn, 'joined!')
-    print(
-        f'Received connection from {nicknames[conn]} {sessions[conn].address}')
     try:
-        conn.sendall(b'<welcome: %a>\n' % nicknames[conn])
+        conn.sendall(bytes('Input your nickname\r\n', 'utf-8'))
+        answer = await readline()
+        nicknames[conn] = answer
+        send_mess(conn, 'joined!')
+        print(
+            f'Received connection from {nicknames[conn]} {sessions[conn].address}')
+        conn.sendall(bytes(f'<welcome: {nicknames[conn]}>\r\n', 'utf-8'))
         while True:
-            line = await readline(conn)
+            try:
+                line = await readline()
+            except:
+                return
             if line == 'q':
-                conn.sendall(b'%a: %a connection closed\r\n' %
-                             (nicknames[conn], sessions[conn].address))
+                conn.sendall(bytes(
+                    f'{nicknames[conn]}: {sessions[conn].address} connection closed\r\n',
+                    'utf-8'))
+                send_mess(conn, f'{nicknames[conn]} leaved!')
                 return
             send_mess(conn, line)
 
             print(f'{nicknames[conn]} --> {line}')
-
     finally:
-        send_mess(conn, f'{nicknames[conn]} leaved!')
-        print(f'{nicknames[conn]} {sessions[conn].address} leaved')
+        try:
+            print(f'{nicknames[conn]} {sessions[conn].address} leaved')
+        except:
+            print("Error connected")
 
 
 @types.coroutine
-def readline(conn):
+def readline():
     def inner(conn, line):
         gen = generators[conn]
         try:
