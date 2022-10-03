@@ -28,7 +28,10 @@ def reactor(host, port):
                     connect(conn, cli_address)
                     continue
 
-                line = sessions[conn].file.readline()
+                try:
+                    line = sessions[conn].file.readline()
+                except UnicodeDecodeError:
+                    pass
                 if line:
                     callback[conn](conn, line.rstrip())
                 else:
