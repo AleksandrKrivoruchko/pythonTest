@@ -58,7 +58,6 @@ def disconnect(conn):
 
     del sessions[conn]
     del callback[conn]
-   
 
 
 def send_mess(conn, line):
@@ -70,7 +69,6 @@ def send_mess(conn, line):
 
 async def process_request(conn):
     try:
-
         conn.sendall(bytes('Input your nickname\r\n', 'utf-8'))
         answer = await readline()
         nicknames[conn] = answer
@@ -96,7 +94,7 @@ async def process_request(conn):
         try:
             print(f'{nicknames[conn]} {sessions[conn].address} leaved')
         except:
-            print("Error")
+            print("Error connected")
 
 
 @types.coroutine
