@@ -42,6 +42,7 @@ async def handle_connection(reader, writer):
     while True:
         try:
             data = await reader.read(1024)
+            print(f'{nicknames[addr]} --> {data}')
         except ConnectionError:
             print(f"Client suddenly closed while receiving from {addr}")
             break
@@ -64,7 +65,6 @@ async def main(host, port):
     async with server:
         print('Server starting...')
         await server.serve_forever()
-
 
 
 host, port = "127.0.0.1", 55555
