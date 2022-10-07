@@ -16,6 +16,10 @@ def send_message(addr, data):
         except ConnectionError:
             print("Client suddenly closed, cannot send")
             return
+        except IndexError:
+            print(f'Index: {i}')
+            print(writers)
+            return
 
 
 async def handle_connection(reader, writer):
